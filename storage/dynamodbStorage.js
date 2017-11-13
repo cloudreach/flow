@@ -13,6 +13,10 @@ export default class DynamodbStorage {
   }
 
   insertTasks (tasks) {
+    if (tasks.length === 0) {
+      return Promise.resolve(tasks)
+    }
+
     return this._dynamodb.batchWriteItem({
       RequestItems: {
         [this._tableName]: tasks.map(task => ({
