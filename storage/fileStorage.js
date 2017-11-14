@@ -7,6 +7,10 @@ export default class FileStorage {
   }
 
   insertTasks (tasks) {
+    if (tasks.length === 0) {
+      return Promise.resolve(tasks)
+    }
+
     return new Promise((resolve, reject) => {
       let tasksWritten = 0
 
