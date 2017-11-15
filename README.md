@@ -6,6 +6,8 @@ This was born from billing projects where the same task coordination logic was b
 written and copied around, and where workflows that were to be executed in AWS Lambda would need to
 be tested locally.
 
+**Note**: This project is experimental. Use with extreme caution.
+
 ## Concepts
 
 - **task:** A task is a unit of work. Tasks in flow are described by an object with the following
