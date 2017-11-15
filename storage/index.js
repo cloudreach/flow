@@ -1,5 +1,5 @@
-import Dynamodb from './dynamodbStorage'
-import File from './fileStorage'
-import Memory from './memoryStorage'
-
-export { Dynamodb, File, Memory }
+module.exports = {
+  Dynamodb: require('./dynamodbStorage'),
+  File: require('./fileStorage'),
+  Memory: require('./memoryStorage')
+}

@@ -1,8 +1,8 @@
-import http from 'http'
-import stream from 'stream'
-import url from 'url'
+const http = require('http')
+const stream = require('stream')
+const url = require('url')
 
-export default class HttpExecutor {
+module.exports = class HttpExecutor {
   constructor (taskServerUrl) {
     this.taskServerUrl = typeof taskServerUrl === 'object'
       ? taskServerUrl

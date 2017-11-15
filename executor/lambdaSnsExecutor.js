@@ -1,4 +1,4 @@
-export default class LambdaSnsExecutor {
+module.exports = class LambdaSnsExecutor {
   constructor (SNS, topicArn) {
     this._sns = new SNS({ params: { TopicArn: topicArn } })
   }

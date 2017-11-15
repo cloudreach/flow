@@ -1,6 +1,6 @@
-import uuid from 'uuid'
+const uuid = require('uuid')
 
-import { DependencyNotCompleteError } from './medium'
+const { DependencyNotCompleteError } = require('./medium')
 
 /*
  * Creates a flow compute handler wrapping the given function.
@@ -8,7 +8,7 @@ import { DependencyNotCompleteError } from './medium'
  * A compute handler will be given the input and the task, and the result will be stored as output
  * and the task's dependents will be started.
  */
-export function compute (fn) {
+function compute (fn) {
   return (input, task, medium) => {
     return fn(input, task, medium)
       .then(output => medium.startDependents(task.id, output))
@@ -24,7 +24,7 @@ export function compute (fn) {
  * Graph handlers ignore the result of the function, as output will be computed for the tasks in the
  * graph.
  */
-export function graph (fn) {
+function graph (fn) {
   return (input, task, medium) => {
     const graph = new TaskGraph()
 
@@ -60,7 +60,7 @@ export function graph (fn) {
  * dependency output as input to the task. It also handles saving back to a source task if
  * specified.
  */
-export function sink (fn) {
+function sink (fn) {
   return (input, task, medium) => {
     return medium.loadDependencyOutputs(task.dependencies)
       .then(_sink)
@@ -88,7 +88,7 @@ export function sink (fn) {
 /*
  * Provides an interface for defining a graph of tasks.
  */
-export class TaskGraph {
+class TaskGraph {
   constructor (sourceTask) {
     this.tasks = []
 
@@ -119,4 +119,11 @@ export class TaskGraph {
       destination.dependencies.push(source.id)
     }
   }
+}
+
+module.exports = {
+  compute,
+  graph,
+  sink,
+  TaskGraph
 }

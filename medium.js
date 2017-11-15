@@ -1,4 +1,4 @@
-export default class Medium {
+class Medium {
   constructor (executor, storage) {
     this._handlers = {}
 
@@ -80,19 +80,19 @@ export default class Medium {
   }
 }
 
-export class TaskNotFoundError extends CustomError {
+class TaskNotFoundError extends CustomError {
   constructor (taskId) {
     super(`Task ${taskId} not found`)
   }
 }
 
-export class TaskAlreadyCompleteError extends CustomError {
+class TaskAlreadyCompleteError extends CustomError {
   constructor (taskId) {
     super(`Task ${taskId} is already complete`)
   }
 }
 
-export class DependencyNotCompleteError extends CustomError {
+class DependencyNotCompleteError extends CustomError {
   constructor (dependencyId) {
     super(`Dependency task ${dependencyId} is not complete`)
   }
@@ -105,3 +105,11 @@ function CustomError (message) {
 }
 CustomError.prototype = Object.create(Error.prototype)
 CustomError.prototype.constructor = CustomError
+
+Object.assign(Medium, {
+  TaskNotFoundError,
+  TaskAlreadyCompleteError,
+  DependencyNotCompleteError
+})
+
+module.exports = Medium
