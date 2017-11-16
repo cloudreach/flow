@@ -9,9 +9,11 @@
     "url": "https://github.com/cloudreach-pdev/flow.git"
   },
   "dependencies": {
-    "aws-sdk": "^2.149.0",
     "dynamodb-data-types": "^3.0.0",
     "uuid": "^3.1.0"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "peerDependencies": {
+    "aws-sdk": "^2.149.0"
+  }
 }

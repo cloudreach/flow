@@ -1,4 +1,3 @@
-import aws from 'aws-sdk'
 import dynamodbDataTypes, { AttributeValue as attr } from 'dynamodb-data-types'
 
 import { TaskAlreadyCompleteError } from '../medium'
@@ -6,10 +5,10 @@ import { TaskAlreadyCompleteError } from '../medium'
 dynamodbDataTypes.preserveArrays()
 
 export default class DynamodbStorage {
-  constructor (tableName) {
+  constructor (DynamoDB, tableName) {
     this._tableName = tableName
 
-    this._dynamodb = new aws.DynamoDB({ params: { TableName: tableName } })
+    this._dynamodb = new DynamoDB({ params: { TableName: tableName } })
   }
 
   insertTasks (tasks) {

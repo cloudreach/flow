@@ -1,8 +1,6 @@
-import aws from 'aws-sdk'
-
 export default class LambdaSnsExecutor {
-  constructor (topicArn) {
-    this._sns = new aws.SNS({ params: { TopicArn: topicArn } })
+  constructor (SNS, topicArn) {
+    this._sns = new SNS({ params: { TopicArn: topicArn } })
   }
 
   runTask (handler, event, context, callback) {
