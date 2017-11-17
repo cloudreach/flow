@@ -1,4 +1,4 @@
-export default class MemoryStorage {
+module.exports = class MemoryStorage {
   constructor (tableName) {
     this.tasks = {}
   }

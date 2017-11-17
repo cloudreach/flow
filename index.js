@@ -1,9 +1,9 @@
-import Medium from './medium'
-import * as executor from './executor'
-import * as handler from './handler'
-import * as storage from './storage'
+const Medium = require('./medium')
+const executor = require('./executor')
+const handler = require('./handler')
+const storage = require('./storage')
 
-export default function flow (medium, handlers) {
+function flow (medium, handlers) {
   for (let taskName of Object.keys(handlers)) {
     medium.registerHandler(taskName, handlers[taskName])
   }
@@ -12,3 +12,5 @@ export default function flow (medium, handlers) {
 }
 
 Object.assign(flow, { Medium, executor, handler, storage })
+
+module.exports = flow

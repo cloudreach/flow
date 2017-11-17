@@ -1,4 +1,4 @@
-export default class FnExecutor {
+module.exports = class FnExecutor {
   runTask (handler, taskId, taskName) {
     return handler(taskId, taskName)
   }

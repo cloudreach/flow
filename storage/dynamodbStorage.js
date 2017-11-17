@@ -1,10 +1,12 @@
-import dynamodbDataTypes, { AttributeValue as attr } from 'dynamodb-data-types'
+const dynamodbDataTypes = require('dynamodb-data-types')
 
-import { TaskAlreadyCompleteError } from '../medium'
+const { TaskAlreadyCompleteError } = require('../medium')
 
 dynamodbDataTypes.preserveArrays()
 
-export default class DynamodbStorage {
+const attr = dynamodbDataTypes.AttributeValue
+
+module.exports = class DynamodbStorage {
   constructor (DynamoDB, tableName) {
     this._tableName = tableName
 
