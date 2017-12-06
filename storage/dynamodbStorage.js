@@ -21,7 +21,7 @@ module.exports = class DynamodbStorage {
     const batchWriteLimit = 25
     const taskBatches = chunk(tasks, batchWriteLimit)
 
-    Promise.all(taskBatches.map((taskBatch) => {
+    return Promise.all(taskBatches.map((taskBatch) => {
       return this._dynamodb.batchWriteItem({
         RequestItems: {
           [this._tableName]: taskBatch.map(task => ({
