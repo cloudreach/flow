@@ -18,17 +18,24 @@ module.exports = class DynamodbStorage {
       return Promise.resolve(tasks)
     }
 
-    return this._dynamodb.batchWriteItem({
-      RequestItems: {
-        [this._tableName]: tasks.map(task => ({
-          PutRequest: { Item: attr.wrap(task) }
-        }))
-      }
-    }).promise()
-      .then(data => {
-        const unprocessedItems = data.UnprocessedItems[this._tableName]
-        if (unprocessedItems && unprocessedItems.length > 0) {
-          throw new Error('Failed to create all tasks')
+    const batchWriteLimit = 25
+    const taskBatches = chunk(tasks, batchWriteLimit)
+
+    Promise.all(taskBatches.map((taskBatch) => {
+      return this._dynamodb.batchWriteItem({
+        RequestItems: {
+          [this._tableName]: taskBatch.map(task => ({
+            PutRequest: { Item: attr.wrap(task) }
+          }))
+        }
+      }).promise()
+    }))
+      .then(responses => {
+        for (const response of responses) {
+          const unprocessedItems = response.UnprocessedItems[this._tableName]
+          if (unprocessedItems && unprocessedItems.length > 0) {
+            throw new Error('Failed to create all tasks')
+          }
         }
         return tasks
       })
@@ -93,4 +100,12 @@ module.exports = class DynamodbStorage {
         }
       })
   }
+}
+
+function chunk(array, chunkSize) {
+  const chunks = []
+  for (let chunkStart = 0; chunkStart < array.length; chunkStart += chunkSize) {
+    chunks.push(array.slice(chunkStart, chunkStart + chunkSize))
+  }
+  return chunks
 }
