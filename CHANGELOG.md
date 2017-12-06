@@ -4,6 +4,9 @@ Categories: Removed, Changed, Added, Deprecated, Fixed, Security, Nonfunctional
 
 ## Unreleased
 
+### Fixed
+- PDEV-1969 - Fix inserting more than 25 tasks into DynamoDB storage.
+
 ## 0.1.0 (2017-11-17)
 
 ### Changed
