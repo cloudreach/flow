@@ -51,22 +51,29 @@ module.exports = class DynamodbStorage {
       return Promise.resolve([])
     }
 
-    return this._dynamodb.batchGetItem({
-      RequestItems: {
-        [this._tableName]: {
-          Keys: dependencies.map(id => attr.wrap({ id })),
-          ProjectionExpression: '#id, #output, #status',
-          ExpressionAttributeNames: { '#id': 'id', '#output': 'output', '#status': 'status' }
-        }
-      }
-    }).promise()
-      .then(data => {
-        const unprocessedKeys = data.UnprocessedKeys[this._tableName]
-        if (unprocessedKeys && unprocessedKeys.Keys.length > 0) {
-          throw new Error('Failed to load all dependencies')
-        }
+    const batchGetLimit = 100
+    const dependencyBatches = chunk(dependencies, batchWriteLimit)
 
-        return data.Responses[this._tableName].map(attr.unwrap)
+    return Promise.all(dependencyBatches.map((dependencyBatch) => {
+      return this._dynamodb.batchGetItem({
+        RequestItems: {
+          [this._tableName]: {
+            Keys: dependencyBatch.map(id => attr.wrap({ id })),
+            ProjectionExpression: '#id, #output, #status',
+            ExpressionAttributeNames: { '#id': 'id', '#output': 'output', '#status': 'status' }
+          }
+        }
+      }).promise()
+    }))
+      .then(responses => {
+        return responses.reduce((tasks, response) => {
+          const unprocessedKeys = response.UnprocessedKeys[this._tableName]
+          if (unprocessedKeys && unprocessedKeys.Keys.length > 0) {
+            throw new Error('Failed to load all dependencies')
+          }
+
+          return tasks.concat(response.Responses[this._tableName].map(attr.unwrap))
+        }, [])
       })
   }
 
