@@ -4,6 +4,9 @@ Categories: Removed, Changed, Added, Deprecated, Fixed, Security, Nonfunctional
 
 ## Unreleased
 
+### Fixed
+- Fix loading more than 100 dependency tasks from DynamoDB storage.
+
 ## 0.1.1 (2017-12-12)
 
 ### Fixed
