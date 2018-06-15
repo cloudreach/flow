@@ -4,6 +4,10 @@ Categories: Removed, Changed, Added, Deprecated, Fixed, Security, Nonfunctional
 
 ## Unreleased
 
+### Changed
+
+- PDEV-2664 - Return an empty array if no dependencies to load.
+
 ## 0.1.1 (2017-12-12)
 
 ### Fixed
