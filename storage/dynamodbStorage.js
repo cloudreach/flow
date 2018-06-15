@@ -52,7 +52,7 @@ module.exports = class DynamodbStorage {
     }
 
     const batchGetLimit = 100
-    const dependencyBatches = chunk(dependencies, batchWriteLimit)
+    const dependencyBatches = chunk(dependencies, batchGetLimit)
 
     return Promise.all(dependencyBatches.map((dependencyBatch) => {
       return this._dynamodb.batchGetItem({
