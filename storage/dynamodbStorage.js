@@ -48,7 +48,7 @@ module.exports = class DynamodbStorage {
 
   loadDependencies (dependencies) {
     if (dependencies.length === 0) {
-      return Promise.resolve(dependencies)
+      return Promise.resolve([])
     }
 
     return this._dynamodb.batchGetItem({
