@@ -47,6 +47,10 @@ module.exports = class DynamodbStorage {
   }
 
   loadDependencies (dependencies) {
+    if (dependencies.length === 0) {
+      return Promise.resolve(dependencies)
+    }
+
     return this._dynamodb.batchGetItem({
       RequestItems: {
         [this._tableName]: {
@@ -102,7 +106,7 @@ module.exports = class DynamodbStorage {
   }
 }
 
-function chunk(array, chunkSize) {
+function chunk (array, chunkSize) {
   const chunks = []
   for (let chunkStart = 0; chunkStart < array.length; chunkStart += chunkSize) {
     chunks.push(array.slice(chunkStart, chunkStart + chunkSize))
