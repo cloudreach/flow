@@ -54,25 +54,40 @@ module.exports = class DynamodbStorage {
     const batchGetLimit = 100
     const dependencyBatches = chunk(dependencies, batchGetLimit)
 
-    return Promise.all(dependencyBatches.map((dependencyBatch) => {
+    // getAllItems makes a single request to batchGetItem and then recursively calls itself to
+    // get the next page of items (if there are any unprocessed keys), concatenating the results
+    // into one array.
+    const getAllItems = (requestItems) => {
       return this._dynamodb.batchGetItem({
-        RequestItems: {
-          [this._tableName]: {
-            Keys: dependencyBatch.map(id => attr.wrap({ id })),
-            ProjectionExpression: '#id, #output, #status',
-            ExpressionAttributeNames: { '#id': 'id', '#output': 'output', '#status': 'status' }
-          }
-        }
+        RequestItems: requestItems
       }).promise()
-    }))
-      .then(responses => {
-        return responses.reduce((tasks, response) => {
-          const unprocessedKeys = response.UnprocessedKeys[this._tableName]
-          if (unprocessedKeys && unprocessedKeys.Keys.length > 0) {
-            throw new Error('Failed to load all dependencies')
-          }
+        .then((response) => {
+          const unprocessedKeys = response.UnprocessedKeys
 
-          return tasks.concat(response.Responses[this._tableName].map(attr.unwrap))
+          const nextItemsPromise = (unprocessedKeys[this._tableName] && unprocessedKeys[this._tableName].Keys.length > 0)
+            ? getAllItems(unprocessedKeys)
+            : Promise.resolve([])
+
+          return nextItemsPromise
+            .then((nextItems) => {
+              return response.Responses[this._tableName].map(attr.unwrap)
+                .concat(nextItems)
+            })
+        })
+    }
+
+    return Promise.all(dependencyBatches.map((dependencyBatch) => {
+      return getAllItems({
+        [this._tableName]: {
+          Keys: dependencyBatch.map(id => attr.wrap({ id })),
+          ProjectionExpression: '#id, #output, #status',
+          ExpressionAttributeNames: { '#id': 'id', '#output': 'output', '#status': 'status' }
+        }
+      })
+    }))
+      .then((batchedItems) => {
+        return batchedItems.reduce((tasks, items) => {
+          return tasks.concat(items)
         }, [])
       })
   }
