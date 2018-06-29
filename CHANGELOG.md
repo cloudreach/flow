@@ -4,6 +4,8 @@ Categories: Removed, Changed, Added, Deprecated, Fixed, Security, Nonfunctional
 
 ## Unreleased
 
+## 0.1.4
+
 ### Fixed
 
 - PDEV-2694 - Fix loading dependency tasks when DynamoDB response has multiple pages.
