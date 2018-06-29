@@ -6,7 +6,13 @@ Categories: Removed, Changed, Added, Deprecated, Fixed, Security, Nonfunctional
 
 ### Fixed
 
-- Fix loading more than 100 dependency tasks from DynamoDB storage.
+- PDEV-2694 - Fix loading dependency tasks when DynamoDB response has multiple pages.
+
+## 0.1.3
+
+### Fixed
+
+- PDEV-2656 - Fix loading more than 100 dependency tasks from DynamoDB storage.
 
 ## 0.1.2 (2018-06-15)
 
