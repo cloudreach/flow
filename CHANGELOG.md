@@ -4,6 +4,10 @@ Categories: Removed, Changed, Added, Deprecated, Fixed, Security, Nonfunctional
 
 ## Unreleased
 
+### Added
+
+- PDEV-2925 - Added a storage backend that uses a Sequelize model for storing tasks.
+
 ## 0.1.4
 
 ### Fixed
