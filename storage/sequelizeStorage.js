@@ -14,7 +14,10 @@ module.exports = class SequelizeStorage {
     if (!task) {
       throw new Error(`Task ${taskId} not found`)
     }
-    return task.dataValues
+    return {
+      ...task.dataValues,
+      output: JSON.stringify(task.dataValues.output)
+    }
   }
 
   async loadDependencies (dependencies) {
@@ -26,9 +29,8 @@ module.exports = class SequelizeStorage {
       }
     })
 
-    return dependencyTasks.map((task) => {
-      const { id, output, status } = task.dataValues
-      return { id, output, status }
+    return dependencyTasks.map(({ id, output, status }) => {
+      return { id, output: JSON.stringify(output), status }
     })
   }
 
